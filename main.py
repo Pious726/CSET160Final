@@ -6,12 +6,21 @@ conn_str = "mysql://root:cset155@localhost/exams"
 engine = create_engine(conn_str, echo=True)
 conn = engine.connect()
 
-@app.route('/')
-def hello():
+@app.route('/', methods=["GET"])
+def getAccounts():
     return render_template('index.html')
 
+@app.route('/', methods=["POST"])
+def signup():
+    try:
+        conn.execute(text('insert into Accounts value()'), request.form)
+        conn.commit()
+        return render_template('login.html', error = None, success = "Successful")
+    except:
+        return render_template('index.html', error = "Failed", success = None)
+
 @app.route('/login.html')
-def signUp():
+def login():
     return render_template('login.html')
 
 @app.route('/home.html')
