@@ -21,3 +21,6 @@ def tests():
 @app.route('/accounts')
 def accounts():
     return render_template('accounts.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
