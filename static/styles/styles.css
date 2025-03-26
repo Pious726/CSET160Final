@@ -17,6 +17,10 @@ html {
     color: var(--textColor);
     font-size: 18px;
 }
+
+html, body {
+    height: 100%;
+}
 .container {
     max-width: 1400px;
     width: 80%;
@@ -43,16 +47,22 @@ header {
 
 .barNav {
     display: flex;
+    justify-content: space-evenly;
+   
 
 }
 
 .barNav li {
-    margin-right: 10%;
+    align-items: center;
+    margin-right: 50%;
     list-style-type: none;
 }
 
-.logo {
-    margin-right: 15%;
+
+
+.logo_img {
+    max-width: 10%;
+    
 }
 
 /* Styles for footer */

@@ -24,7 +24,8 @@ def tests():
 
 @app.route('/accounts.html')
 def accounts():
-    return render_template('accounts.html')
+    accounts = conn.execute(text('select * from accounts')).all()
+    return render_template('accounts.html', accounts = accounts[:10])
 
 if __name__ == '__main__':
     app.run(debug=True)
