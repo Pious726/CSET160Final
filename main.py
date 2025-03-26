@@ -10,15 +10,19 @@ conn = engine.connect()
 def hello():
     return render_template('index.html')
 
-@app.route('/signup')
+@app.route('/login.html')
 def signUp():
-    return render_template('signup.html')
+    return render_template('login.html')
 
-@app.route('/tests')
+@app.route('/home.html')
+def home():
+    return render_template('home.html')
+
+@app.route('/tests.html')
 def tests():
     return render_template('tests.html')
 
-@app.route('/accounts')
+@app.route('/accounts.html')
 def accounts():
     return render_template('accounts.html')
 
