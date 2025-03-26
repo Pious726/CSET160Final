@@ -8,4 +8,16 @@ conn = engine.connect()
 
 @app.route('/')
 def hello():
-    return render_template('base.html')
+    return render_template('login.html')
+
+@app.route('/signup')
+def signUp():
+    return render_template('signup.html')
+
+@app.route('/tests')
+def tests():
+    return render_template('tests.html')
+
+@app.route('/accounts')
+def accounts():
+    return render_template('accounts.html')

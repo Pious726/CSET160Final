@@ -3,10 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/styles/styles.css">
     <title>Document</title>
 </head>
 <body>
-    
+    <header>
+        <div class="topnav">
 
+            <div class="logo">
+                <img class="logo_img" src="../static/images/#" alt="logo" id="logo">
+            </div>
+
+                <div id="nav">
+                    <ul class="barNav">
+                        <li><a href="#">Accounts</a></li>
+                        <li><a href="#">tests</a></li>
+                    </ul>
+                </div>
+        </div>
+    </header>
+    
+    {% block body %}
+    {% endblock %}
+
+    <footer>
+
+    </footer>
 </body>
 </html>
