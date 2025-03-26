@@ -1,0 +1,29 @@
+/* Universal styles */
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+html {
+
+}
+
+.container {
+    max-width: 1400px;
+    width: 80%;
+    margin: 0 auto;
+}
+
+
+/* Styles for footer */
+footer {
+    padding: 50px 0;
+    background-color: #000;
+}
+
+.copyright {
+    color: #fff;
+    text-align: center;
+}
