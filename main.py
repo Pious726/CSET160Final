@@ -49,10 +49,14 @@ def home():
 
 @app.route('/accounts.html')
 def accounts():
-    accounts = conn.execute(text('select * from accounts')).all()
-    return render_template('accounts.html', accounts = accounts[:10])\
-    
+    account_type = request.args.get('AccountType', '')
+    query = 'select * from accounts'
 
+    if account_type:
+        query += ' where AccountType = :AccountType'
+
+    accounts = conn.execute(text(query), {"AccountType": account_type}).all() if account_type else conn.execute(text(query)).all()
+    return render_template('accounts.html', accounts = accounts)
 
 @app.route("/tests.html", methods=["GET", "POST"])
 def create_test():

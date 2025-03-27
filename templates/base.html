@@ -13,7 +13,7 @@
             
                 <div id="nav">
                     <ul class="barNav">
-                        <li><a href="index.html">Home</li>
+                        <li><a href="home.html">Home</li>
                         <li><a href="accounts.html">Accounts</a></li>
                         <li><a href="tests.html">Tests</a></li>
                     </ul>
@@ -32,4 +32,27 @@
         </div>
     </footer>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedType = urlParams.get("AccountType");
+
+        if (selectedType) {
+            document.getElementById("AccountType").value = selectedType;
+        }
+
+        document.getElementById('AccountType').addEventListener('change', function() {
+            const selectedType = this.value;
+            const url = new URL(window.location.href);
+
+            if (selectedType) {
+                url.searchParams.set('AccountType', selectedType);
+            } else {
+                url.searchParams.delete('AccountType');
+            }
+
+            window.location.href = url.toString()
+        });
+    });
+</script>
 </html>
