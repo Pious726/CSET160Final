@@ -30,48 +30,59 @@ def signup():
 
 @app.route('/login.html', methods=["GET"])
 def getlogins():
-    
     return render_template('login.html')
 
 @app.route('/login.html', methods=["POST"])
 def login():
     try:
-        password = conn.execute(text('select UserPassword from accounts')).fetchone()
-
-        if password == request.form.get("UserPassword"):
+        password = request.form.get("UserPassword")
+        username = request.form.get("Username")
+        
+        if password == conn.execute(text(f'select UserPassword from accounts where Username = {username}')).fetchone():
             return render_template('login.html', error = None, success = "Successful")
     except:
-        return render_template('login.html', error = "Failed", success = None)
+        return render_template('login.html', error = "Incorrect username or password", success = None)
 
 @app.route('/home.html')
 def home():
     return render_template('home.html')
 
-@app.route('/tests.html')
-def tests():
-    return render_template('tests.html')
-
-
 @app.route('/accounts.html')
 def accounts():
     accounts = conn.execute(text('select * from accounts')).all()
-    return render_template('accounts.html', accounts = accounts[:10])
+    return render_template('accounts.html', accounts = accounts[:10])\
+    
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/tests.html", methods=["GET", "POST"])
 def create_test():
-    question_count = int(request.form.get('question_count', 1))
+    if request.method == "GET":
+        question_count = 1
+        questions = []
+        test_name = ""
+    else:
+        # Get the current question count from the form
+        question_count = request.form.get('question_count', '1')
+        question_count = int(question_count) if question_count.isdigit() else 1
 
-    if request.method == 'POST':
+        # List to store the entered questions
+        questions = []
+        for i in range(1, question_count + 1):
+            question = request.form.get(f'question{i}')
+            if question:
+                questions.append(question)
+
+        # Retain the test name entered by the user
+        test_name = request.form.get('testName', '')
+
+        # If the "Add Question" button was clicked, increase question count
         if 'add_question' in request.form:
             question_count += 1
+        # If the "Submit Test" button was clicked, show the submitted test data
         elif 'submit_test' in request.form:
-            test_name = request.form.get('testName')
-            questions = [request.form.get(f'question{i}') for i in range(1, question_count + 1)]
             return f"Test Name: {test_name}, Questions: {questions}"
-        
-    return render_template('tests.html', question_count=question_count)
 
-    
+    return render_template('tests.html', question_count=question_count, questions=questions, test_name=test_name)
+
 if __name__ == '__main__':
     app.run(debug=True)
