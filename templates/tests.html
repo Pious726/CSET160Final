@@ -1,4 +1,13 @@
 {%extends 'base.html'%}
 {% block body %}
-        
+        <h1> You are currently in Administrator view </h1>
+        <button id="createTest">Create Test</button>
+        <button id="editTest">Edit Test</button>
+
+        <div id="testFormContainer" class="hidden">
+            <h2>Create a new test</h2>
+            <form id="testForm">
+            <label for="testName">Test Name</label>
+            <input type="text" id="testName" name="testName">
+        </div>
 {% endblock %}

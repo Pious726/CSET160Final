@@ -13,9 +13,9 @@ def getAccounts():
 @app.route('/', methods=["POST"])
 def signup():
     try:
-        conn.execute(text('insert into accounts values(:Username, :EmailAddress, :UserPassword, :AccountType)'), request.form)
+        conn.execute(text('insert into accounts(Username, EmailAddress, UserPassword, AccountType) values(:Username, :EmailAddress, :UserPassword, :AccountType)'), request.form)
         conn.commit()
-        return render_template('login.html', error = None, success = "Successful")
+        return render_template('index.html', error = None, success = "Successful")
     except:
         return render_template('index.html', error = "Failed", success = None)
 
@@ -37,5 +37,12 @@ def accounts():
     accounts = conn.execute(text('select * from accounts')).all()
     return render_template('accounts.html', accounts = accounts[:10])
 
+'''
+@app.route("/", method=["GET", "POST"])
+def create_test():
+    try: 
+        conn.execute(text("Insert into tests (question_text) VALUES (:question_text)"),)
+'''
+    
 if __name__ == '__main__':
     app.run(debug=True)
