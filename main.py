@@ -13,7 +13,7 @@ def getAccounts():
 @app.route('/', methods=["POST"])
 def signup():
     try:
-        conn.execute(text('insert into Accounts value()'), request.form)
+        conn.execute(text('insert into accounts values(:Username, :EmailAddress, :UserPassword, :AccountType)'), request.form)
         conn.commit()
         return render_template('login.html', error = None, success = "Successful")
     except:
@@ -30,6 +30,7 @@ def home():
 @app.route('/tests.html')
 def tests():
     return render_template('tests.html')
+
 
 @app.route('/accounts.html')
 def accounts():

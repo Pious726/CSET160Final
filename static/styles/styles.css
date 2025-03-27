@@ -21,6 +21,8 @@ html {
 html, body {
     height: 100%;
 }
+
+
 .container {
     max-width: 1400px;
     width: 80%;
@@ -31,7 +33,7 @@ html, body {
 header {
     background-color: var(--textColor);
     color: var(--backgroundColor);
-    padding: 50px;
+    padding: 5px;
 }
 
 #nav ul a{
@@ -42,20 +44,22 @@ header {
 
 .topnav {
     display: flex;
+    align-items: center;
     
 }
 
 .barNav {
     display: flex;
     justify-content: space-evenly;
-   
+    margin-left: 25%;
 
 }
 
 .barNav li {
     align-items: center;
-    margin-right: 50%;
+    margin-right: 60%;
     list-style-type: none;
+    font-size: 1.3em;
 }
 
 .logo_img {
@@ -67,6 +71,12 @@ header {
 footer {
     padding: 50px 0;
     background-color: var(--textColor);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    margin: 0;
 }
 
 .copyright {
@@ -91,6 +101,7 @@ footer {
     margin: 0 auto;
     max-width: 100%;
     height: auto;
+    padding: 25px 75px;
 }
 input {
     display: block;
