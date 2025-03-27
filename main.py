@@ -15,7 +15,7 @@ def signup():
     try:
         conn.execute(text('insert into accounts(Username, EmailAddress, UserPassword, AccountType) values(:Username, :EmailAddress, :UserPassword, :AccountType)'), request.form)
         conn.commit()
-        return render_template('index.html', error = None, success = "Successful")
+        return render_template('login.html', error = None, success = "Successful")
     except:
         return render_template('index.html', error = "Failed", success = None)
 
