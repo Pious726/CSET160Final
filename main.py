@@ -14,29 +14,32 @@ def getAccounts():
 def signup():
     try:
         conn.execute(text('insert into accounts(Username, EmailAddress, UserPassword, AccountType) values(:Username, :EmailAddress, :UserPassword, :AccountType)'), request.form)
+
+        account_type = request.form.get("AccountType")
+        account_id = conn.execute(text('select last_insert_id()')).scalar()
+
+        if account_type == "Student":
+            conn.execute(text('insert into students(AccountID, AccountType) values(:AccountID, :AccountType)'), {"AccountID": account_id, "AccountType": account_type})
+        elif account_type == "Teacher":
+            conn.execute(text('insert into teachers(AccountID, AccountType) values(:AccountID, :AccountType)'), {"AccountID": account_id, "AccountType": account_type})
+            
         conn.commit()
-        accountType = request.form.get("AccountType")
-
-        if accountType == "Student":
-            conn.execute(text('insert into students(AccountType) values(:AccountType)'), request.form)
-            conn.commit()
-        elif accountType == "Teacher":
-            conn.execute(text('insert into teachers(AccountType) values(:AccountType)'), request.form)
-            conn.commit()
-
         return render_template('login.html', error = None, success = "Successful")
     except:
         return render_template('index.html', error = "Failed", success = None)
 
 @app.route('/login.html', methods=["GET"])
 def getlogins():
+    
     return render_template('login.html')
 
 @app.route('/login.html', methods=["POST"])
 def login():
     try:
-        
-        return render_template('login.html', error = None, success = "Successful")
+        password = conn.execute(text('select UserPassword from accounts')).fetchone()
+
+        if password == request.form.get("UserPassword"):
+            return render_template('login.html', error = None, success = "Successful")
     except:
         return render_template('login.html', error = "Failed", success = None)
 
@@ -55,7 +58,7 @@ def accounts():
     return render_template('accounts.html', accounts = accounts[:10])
 
 
-@app.route("/", method=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def create_test():
     question_count = int(request.form.get('question_count', 1))
 
@@ -67,7 +70,7 @@ def create_test():
             questions = [request.form.get(f'question{i}') for i in range(1, question_count + 1)]
             return f"Test Name: {test_name}, Questions: {questions}"
         
-return render_template
+    return render_template('tests.html', question_count=question_count)
 
     
 if __name__ == '__main__':

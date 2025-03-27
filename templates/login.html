@@ -7,18 +7,27 @@
     <link href="/static/styles/styles.css" rel="stylesheet">
     <title>Exam App - Log in </title>
 </head>
-<div class="register" id="register">
+<body class="register" id="register">
     <div id="register-container" class="login-box">
+        {% if error %}
+            <h2>{{error}}</h2>
+        {% endif %}
+
+        {% if success %}
+            <h2>{{success}}</h2>
+        {% endif %}
         <div class="signup-item">
             <h1>Log In!</h1>
-
-                <form action="/login.html" method="POST">
-                    <input type="text" placeholder="Username" id="Uname">
-                    <input type="password" placeholder="Password" id="password">
-                    <input type="submit" value="Submit" class="input_submit">
-                </form>
+            <form action="/login.html" method="POST">
+                <input type="text" name="Username" placeholder="Username" id="Uname">
+                <input type="password" name="UserPassword" placeholder="Password" id="password">
+                <input type="submit" value="Submit" class="input_submit">
+            </form>
+        </div>
+        <div class="signup-item">
+            <h2>Don't have an account? <a href="/">Sign up here!</a></h2>
         </div>
     </div>
-</div>
+</body>
 </html>
 

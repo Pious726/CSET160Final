@@ -1,13 +1,20 @@
 {%extends 'base.html'%}
 {% block body %}
-        <h1> You are currently in Administrator view </h1>
-        <button id="createTest">Create Test</button>
-        <button id="editTest">Edit Test</button>
+      <h1> You are currently in Administrator view</h1>
+      <form method="POST">
+        <label for="testName">Tests Name:</label>
+        <input type="text" id="testName" name="testName" required>
 
-        <div id="testFormContainer" class="hidden">
-            <h2>Create a new test</h2>
-            <form id="testForm">
-            <label for="testName">Test Name</label>
-            <input type="text" id="testName" name="testName">
-        </div>
+        <input type="hidden" name="question_count" value="{{question_count}}">
+
+        {% for i in range(1, question_count + 1) %}
+            <div>
+                <label for="question{{ i }}">Question {{i}}:</label>
+                <input type="text" id="question{{ i }}" name="question{{ i }}" required>
+
+            </div>
+        {% endfor %}
+
+<button type="submit" name="add_question">Add Question</button>
+<button type="submit" name="submit_test">Submit Test</button>
 {% endblock %}
