@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from sqlalchemy import create_engine, text
 
 app = Flask(__name__)
@@ -35,13 +35,14 @@ def getlogins():
 @app.route('/login.html', methods=["POST"])
 def login():
     try:
-        password = request.form.get("UserPassword")
         username = request.form.get("Username")
+        password = request.form.get("UserPassword")
+        query = conn.execute(text(f'select UserPassword from accounts where Username = :username'), {'username': username}).scalar()
         
-        if password == conn.execute(text(f'select UserPassword from accounts where Username = {username}')).fetchone():
-            return render_template('login.html', error = None, success = "Successful")
+        if query and password == query:
+            return render_template('home.html', error = None, success = "Successful")
     except:
-        return render_template('login.html', error = "Incorrect username or password", success = None)
+        return render_template('login.html', error = "Incorrect Username or Password", success = None)
 
 @app.route('/home.html')
 def home():
@@ -58,35 +59,38 @@ def accounts():
     accounts = conn.execute(text(query), {"AccountType": account_type}).all() if account_type else conn.execute(text(query)).all()
     return render_template('accounts.html', accounts = accounts)
 
-@app.route("/tests.html", methods=["GET", "POST"])
-def create_test():
-    if request.method == "GET":
-        question_count = 1
-        questions = []
-        test_name = ""
-    else:
-        # Get the current question count from the form
-        question_count = request.form.get('question_count', '1')
-        question_count = int(question_count) if question_count.isdigit() else 1
 
-        # List to store the entered questions
-        questions = []
-        for i in range(1, question_count + 1):
-            question = request.form.get(f'question{i}')
-            if question:
-                questions.append(question)
+@app.route("/tests.html", methods=["POST"])
+def create_tests():
+    try:
+        TestName = request.form.get('TestName', '').strip()
+        questions = [request.form.get(f'question{i}', '').strip() for i in range(1, int(request.form.get('question_count', '1')) + 1) if request.form.get(f'question{i}')]
+    
+        if TestName and questions:
+            with engine.connect() as conn:
+                conn.execute("insert into tests (TestName) values (:TestName)", {"TestName": TestName})
+                TestID = conn.execute("select last_insert_id()").scalar()
+                conn.execute(
+                     "insert into questions (TestID, question_text) values (:TestID, :question_text)",
+                    [{"TestID": TestID, "question_text": q} for q in questions]
 
-        # Retain the test name entered by the user
-        test_name = request.form.get('testName', '')
+                )
+                conn.commit()
+            return redirect("/tests.html")
+    except:
+        return render_template("tests.html", error="Submission failed")
 
-        # If the "Add Question" button was clicked, increase question count
-        if 'add_question' in request.form:
-            question_count += 1
-        # If the "Submit Test" button was clicked, show the submitted test data
-        elif 'submit_test' in request.form:
-            return f"Test Name: {test_name}, Questions: {questions}"
+@app.route("/tests.html", methods=["GET"])
+def get_tests():
+    with engine.connect() as conn:
+        result = conn.execute("select TestID, TestName from tests")
+        tests = result.fetchall()
 
-    return render_template('tests.html', question_count=question_count, questions=questions, test_name=test_name)
+        for test in tests:
+            questions_result = conn.execute("Select question-text from questions where TestID = :TestID", {"TestID", test["id"]})
+            test["questions"] = [row["question_text"] for row in questions_result.fetchall()]
+
+    return render_template('tests.html', question_count=1, questions=[], TestName="", submitted_tests=tests)
 
 if __name__ == '__main__':
     app.run(debug=True)
