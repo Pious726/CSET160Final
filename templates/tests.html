@@ -1,24 +1,51 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <div class="container">
-        <h1>You are currently in Administrator view</h1>
-        <form method="POST">
-            <label for="testName">Test Name:</label>
-            <input type="text" id="testName" name="testName" value="{{ test_name }}" required>
+    {% if AccountType == 'Student' %}
+        <div class="container">
+            <h1>Welcome Student!</h1>
+            <h2>Select one of the tests below.</h2>
 
-            <input type="hidden" name="question_count" value="{{ question_count }}">
-
-            {% for i in range(1, question_count + 1) %}
-                <div>
-                    <label for="question{{ i }}">Question {{ i }}:</label>
-                    <input type="text" id="question{{ i }}" name="question{{ i }}" 
-                        value="{{ questions[i - 1] if i <= questions | length else '' }}" required>
+            <div class="s-test-container">
+                <div class="s-test-card">
+                    <h1>Test 1</h1>
                 </div>
-            {% endfor %}
+            </div>
+        </div>
+        
+    {% elif AccountType == 'Teacher' %}
+        <div class="container">
+            <h1>Welcome Student!</h1>
+            <h2>Select one of the tests below.</h2>
 
-            <button type="submit" name="add_question">Add Question</button>
-            <button type="submit" name="submit_test">Submit Test</button>
-        </form>
-    </div>
+            <div class="s-test-container">
+                <div class="s-test-card">
+                    <h1>Test 1</h1>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
+
+
+
+<!--<div class="container">
+            <h1>You are currently in Administrator view</h1>
+            <form method="POST">
+                <label for="testName">Test Name:</label>
+                <input type="text" id="testName" name="testName" value="{{ test_name }}" required>
+
+                <input type="hidden" name="question_count" value="{{ question_count }}">
+
+                {% for i in range(1, question_count + 1) %}
+                    <div>
+                        <label for="question{{ i }}">Question {{ i }}:</label>
+                        <input type="text" id="question{{ i }}" name="question{{ i }}" 
+                            value="{{ questions[i - 1] if i <= questions | length else '' }}" required>
+                    </div>
+                {% endfor %}
+
+                <button type="submit" name="add_question">Add Question</button>
+                <button type="submit" name="submit_test">Submit Test</button>
+            </form>
+        </div>-->

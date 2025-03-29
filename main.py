@@ -67,17 +67,24 @@ def accounts():
     accounts = conn.execute(text(query), {"AccountType": account_type}).all() if account_type else conn.execute(text(query)).all()
     return render_template('accounts.html', accounts = accounts)
 
-@app.route("/tests.html", methods=["Get"])
+@app.route("/tests.html", methods=["GET"])
 def gettests():
+    account = conn.execute(text('select AccountType from accounts where IsLoggedIn = 1')).fetchone()
+    account_type = account[0] if account else None
+    return render_template('tests.html', AccountType = account_type)
+
+@app.route('/tests.html', methods=["POST"])
+def viewtests():
     return render_template('tests.html')
 
-@app.route("/tests.html", methods=["POST", "GET"])
+'''
+@app.route("/tests.html", methods=["POST"])
 def create_test():
     try:
         conn.execute(text('Insert into tests(TestName, Question) values(:TestName, :Question)'), request.form)
         return render_template('tests.html', error = None, success = "Successful")
     except:
         return render_template('tests.html', error = "failed", succes = None)
-
+'''
 if __name__ == '__main__':
     app.run(debug=True)
