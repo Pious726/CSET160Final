@@ -67,6 +67,10 @@ def accounts():
     accounts = conn.execute(text(query), {"AccountType": account_type}).all() if account_type else conn.execute(text(query)).all()
     return render_template('accounts.html', accounts = accounts)
 
+@app.route("/tests.html", methods=["Get"])
+def gettests():
+    return render_template('tests.html')
+
 @app.route("/tests.html", methods=["POST", "GET"])
 def create_test():
     try:
@@ -74,8 +78,6 @@ def create_test():
         return render_template('tests.html', error = None, success = "Successful")
     except:
         return render_template('tests.html', error = "failed", succes = None)
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
