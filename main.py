@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, url_for, session
 from sqlalchemy import create_engine, text
  
 app = Flask(__name__)
@@ -67,15 +67,32 @@ def accounts():
     accounts = conn.execute(text(query), {"AccountType": account_type}).all() if account_type else conn.execute(text(query)).all()
     return render_template('accounts.html', accounts = accounts)
 
-@app.route("/tests.html", methods=["GET"])
-def gettests():
-    account = conn.execute(text('select AccountType from accounts where IsLoggedIn = 1')).fetchone()
-    account_type = account[0] if account else None
-    return render_template('tests.html', AccountType = account_type)
+@app.route('/tests.html', methods=["GET","POST"])
+def manage_tests():
+    if request.method == "POST":
+        account_type = conn.execute(text('select AccountType from accounts where IsLoggedIn = 1')).scalar()
+        print(account_type)
 
-@app.route('/tests.html', methods=["POST"])
-def viewtests():
-    return render_template('tests.html')
+        test_name = request.form.get("test_name")
+        description = request.form.get("description")
+        questions = request.form.getlist("questions[]")
+        account_id = 1 # TODO:
+
+        if test_name and description and questions:
+            question_str = ','.join(questions)
+            conn.execute(text('insert into tests(TestName, StudentCompletions, AccountID, Questions, Description) values(:test_name, 0, :account_id, :questions, :description)')), {"test_name": test_name, "account_id": account_id, "questions": question_str, "description": description}
+            conn.commit()
+
+    tests = conn.execute(text('select TestID, TestName, Description from tests')).fetchall()
+
+    return render_template('tests.html', tests=tests, AccountType=account_type)
+
+@app.route("/take_test/<int:test_id>")
+def take_test(test_id):
+    test = conn.execute(text("select TestName, Questions fromt tests where TestID = :test_id"), {"test_id": test_id}).fetchone()
+    
+    questions = test.Questions.split(",")
+    return render_template("taketest.html", test_name=test.TestName, questions=questions)
 
 '''
 @app.route("/tests.html", methods=["POST"])

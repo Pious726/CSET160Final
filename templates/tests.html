@@ -1,38 +1,77 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<p>AccountType: {{AccountType}}</p>
     {% if AccountType == 'Student' %}
         <div class="container">
             <h1>Welcome Student!</h1>
             <h2>Select one of the tests below.</h2>
 
             <div class="s-test-container">
-                <div class="s-test-card">
-                    <h1>Test 1</h1>
-                </div>
+                {% for test in tests %}
+                    <div class="s-test-card">
+                        <h1>{{ test.TestName }}</h1>
+                        <div class="test-description">
+                            <h2>Test Description</h2>
+                            <p>{{ test.Description }}</p>
+                        </div>
+                        <a href="{{ url_for('take_test', test_id=test.TestID) }}">
+                            <button class="test-btn">Take Test</button>
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
         </div>
         
     {% elif AccountType == 'Teacher' %}
         <div class="container">
-            <h1>Welcome Student!</h1>
-            <h2>Select one of the tests below.</h2>
+            <h1>Welcome Teacher!</h1>
+            <h2>Create a new test.</h2>
 
-            <div class="s-test-container">
-                <div class="s-test-card">
-                    <h1>Test 1</h1>
+            <form method="POST">
+                <label for="test_name">Test Name:</label>
+                <input type="text" id="test_name" name="test_name" required>
+
+                <label for="description">Test Description:</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <div id="question-container">
+                    <label for="questions">Questions:</label>
+                    <input type="text" name="questions[]" required>
                 </div>
+
+                <button type="button" onclick="addQuestion()">Add Another Question</button>
+                <button type="submit">Add Test</button>
+            </form>
+
+            <h1>Existing Tests</h1>
+            <div class="s-test-container">
+                {% for test in tests %}
+                    <div class="s-test-card">
+                        <h1>{{ test.TestName }}</h1>
+                        <p>{{ test.Description }}</p>
+                    </div>
+                {% endfor %}
             </div>
         </div>
+
+        <script>
+            function addQuestion() {
+                let container = document.getElementById("question-container");
+                let newInput = document.createElement("input");
+                newInput.type = "text";
+                newInput.name = "questions[]";
+                newInput.required = true;
+                container.appendChild(newInput);
+            }
+        </script>
     {% endif %}
-{% endblock %}
 
 
-
-<!--<div class="container">
+{#<div class="container">
             <h1>You are currently in Administrator view</h1>
             <form method="POST">
-                <label for="testName">Test Name:</label>
+               <label for="testName">Test Name:</label>
                 <input type="text" id="testName" name="testName" value="{{ test_name }}" required>
 
                 <input type="hidden" name="question_count" value="{{ question_count }}">
@@ -48,4 +87,7 @@
                 <button type="submit" name="add_question">Add Question</button>
                 <button type="submit" name="submit_test">Submit Test</button>
             </form>
-        </div>-->
+        </div>#}
+
+
+{% endblock %}
