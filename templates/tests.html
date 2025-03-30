@@ -9,7 +9,7 @@
             <div class="s-test-container">
                 {% for test in tests %}
                     <div class="s-test-card">
-                        <h1>{{ test.TestName }}</h1>
+                        <h1>Test {{ test.TestID }}: {{ test.TestName }}</h1>
                         <div class="test-description">
                             <h2>Test Description</h2>
                             <p>{{ test.Description }}</p>
