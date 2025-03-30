@@ -8,10 +8,9 @@
             {% for question in questions %}
                 <div class="question">
                     <p>{{ question }}</p>
-                    <input type="text" name="answers[]" required>
+                    <input type="text" name="responses[]" required>
                 </div>
             {% endfor %}
-
             <button type="submit">Submit Test</button>
         </form>
     </div>

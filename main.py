@@ -84,21 +84,28 @@ def manage_tests():
     except:
         return render_template('tests.html', AccountType=account_type, error = "Failed", success = None)
 
-@app.route("/take_test/<int:test_id>")
+@app.route("/take_test/<int:test_id>", methods=["GET", "POST"])
 def take_test(test_id):
-    test = conn.execute(text("select TestName, Questions fromt tests where TestID = :test_id"), {"test_id": test_id}).fetchone()
-    
-    questions = test.Questions.split(",")
-    return render_template("taketest.html", test_name=test.TestName, questions=questions)
+    account_id = conn.execute(text('select AccountID from accounts where IsLoggedIn = 1')).scalar()
 
-'''
-@app.route("/tests.html", methods=["POST"])
-def create_test():
-    try:
-        conn.execute(text('Insert into tests(TestName, Question) values(:TestName, :Question)'), request.form)
-        return render_template('tests.html', error = None, success = "Successful")
-    except:
-        return render_template('tests.html', error = "failed", succes = None)
-'''
+    if request.method == "POST":
+        responses = request.form.getlist("responses[]")
+
+        for response in responses:
+            conn.execute(text('insert into responses (TestID, StudentID, ResponseText) values (:test_id, :student_id, :response_text)'), {"test_id": test_id, "student_id": account_id, "response_text": response})
+            
+        conn.commit()
+
+        return render_template("tests.html", success="Responses submitted successfully!")
+
+
+    test = conn.execute(text("select TestName, Questions from tests where TestID = :test_id"), {"test_id": test_id}).fetchone()
+    
+    if test:
+        questions = test.Questions.split(",")
+        return render_template("taketest.html", test_name=test.TestName, questions=questions)
+    else:
+        return render_template("home.html", error="Test not found.")
+
 if __name__ == '__main__':
     app.run(debug=True)

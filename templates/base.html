@@ -13,10 +13,10 @@
             
                 <div id="nav">
                     <ul class="barNav">
-                        <li><a href="home.html">Home</li>
-                        <li><a href="accounts.html">Accounts</a></li>
-                        <li><a href="tests.html">Tests</a></li>
-                        <li><a href="login.html">Log Out</a></li>
+                        <li><a href="{{ url_for('home') }}">Home</li>
+                        <li><a href="{{ url_for('accounts') }}">Accounts</a></li>
+                        <li><a href="{{ url_for('manage_tests') }}">Tests</a></li>
+                        <li><a href="{{ url_for('getlogins') }}">Log Out</a></li>
                     </ul>
                 </div>
         </div>
