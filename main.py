@@ -39,11 +39,8 @@ def getlogins():
 def login():
     try:
         username = request.form.get("Username")
-        print(username)
         password = request.form.get("UserPassword")
-        print(password)
         query = conn.execute(text(f'select UserPassword from accounts where Username = :username'), {'username': username}).scalar()
-        print(query)
         
         if query and password == query:
             conn.execute(text('update accounts set IsLoggedIn = 1 where Username = :username'),  {'username': username})
@@ -69,23 +66,23 @@ def accounts():
 
 @app.route('/tests.html', methods=["GET","POST"])
 def manage_tests():
-    if request.method == "POST":
+    try:
         account_type = conn.execute(text('select AccountType from accounts where IsLoggedIn = 1')).scalar()
-        print(account_type)
-
         test_name = request.form.get("test_name")
         description = request.form.get("description")
         questions = request.form.getlist("questions[]")
-        account_id = 1 # TODO:
+        account_id = conn.execute(text('select AccountID from accounts where IsLoggedIn = 1')).scalar()
 
         if test_name and description and questions:
             question_str = ','.join(questions)
-            conn.execute(text('insert into tests(TestName, StudentCompletions, AccountID, Questions, Description) values(:test_name, 0, :account_id, :questions, :description)')), {"test_name": test_name, "account_id": account_id, "questions": question_str, "description": description}
+            conn.execute(text('insert into tests(TestName, StudentCompletions, AccountID, Questions, Description) values(:test_name, 0, :account_id, :questions, :description)'), {"test_name": test_name, "account_id": account_id, "questions": question_str, "description": description})
             conn.commit()
 
-    tests = conn.execute(text('select TestID, TestName, Description from tests')).fetchall()
+        tests = conn.execute(text('select TestID, TestName, Description from tests')).fetchall()
 
-    return render_template('tests.html', tests=tests, AccountType=account_type)
+        return render_template('tests.html', tests=tests, AccountType=account_type, error = None, success = "Successful")
+    except:
+        return render_template('tests.html', AccountType=account_type, error = "Failed", success = None)
 
 @app.route("/take_test/<int:test_id>")
 def take_test(test_id):
