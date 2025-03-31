@@ -51,25 +51,20 @@
                 <button type="submit">Add Test</button>
             </form>
 
-            
-
             <h1>Existing Tests</h1>
             <div class="s-test-container">
                 {% for test in tests %}
                     <div class="s-test-card">
                         <h1>{{ test.TestName }}</h1>
-                        <p>{{ test.Description }}</p>
-
-                              
-                <form action="{{ url_for('delete_test' , test_id=test.TestID) }}" method="POST">
-                    <button type="submit" class="delete-btn">Delete Test</button>
-                </form>
+                        <p>{{ test.Description }}</p>                              
+                        <form action="{{ url_for('delete_test' , test_id=test.TestID) }}" method="POST">
+                            <button type="submit" class="delete-btn">Delete Test</button>
+                        </form>
+                        <form action="{{ url_for('see_responses', test_id=test.TestID) }}" method="GET">
+                            <button type="submit" class="view-responses-btn">View Responses</button>
+                        </form>
                     </div>
-
-              
-
                 {% endfor %}
-
             </div>
         </div>
 

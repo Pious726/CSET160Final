@@ -2,7 +2,27 @@
 
 {% block body %}
     <div class="container">
-        <h1>{{ test_name }}</h1>
-        
+        <h1>Responses for {{ test_name }}</h1>
+
+        {% if responses %}
+            <table>
+                <tr>
+                    <th>Student</th>
+                    <th>Responses</th>
+                </tr>
+                {% for response in responses %}
+                    <tr>
+                        <td>{{ response.Username }}</td>
+                        <td>{{ response.ResponseText }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No responses.</p>
+        {% endif %}
+
+        <a href="{{ url_for('manage_tests') }}">
+            <button>Back to tests</button>
+        </a>
     </div>
 {% endblock %}

@@ -116,5 +116,16 @@ def delete_test(test_id):
     conn.commit()
     return redirect(url_for("manage_tests"))
 
+@app.route('/test_responses/<int:test_id>', methods=["GET", "POST"])
+def see_responses(test_id):
+    test = conn.execute(text("select TestName from tests where TestID = :test_id"), {"test_id": test_id}).fetchone()
+
+    responses = conn.execute(text("select accounts.Username, responses.ResponseText from responses join accounts on responses.StudentID = accounts.AccountID where responses.TestID = :test_id"), {"test_id": test_id}).fetchall()
+
+    if not test:
+        return redirect(url_for("manage_tests"))
+    
+    return render_template("responses.html", test_name=test.TestName, responses=responses)
+
 if __name__ == '__main__':
     app.run(debug=True)
