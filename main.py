@@ -51,7 +51,9 @@ def login():
 
 @app.route('/home.html')
 def home():
-    return render_template('home.html')
+    username = conn.execute(text('select Username from accounts where IsLoggedIn = 1')).scalar()
+    account_type = conn.execute(text('select AccountType from accounts where IsLoggedIn = 1')).scalar()
+    return render_template('home.html', username = username, account_type = account_type)
 
 @app.route('/accounts.html')
 def accounts():
