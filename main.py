@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, session
+from flask import Flask, render_template, request, url_for, redirect
 from sqlalchemy import create_engine, text
  
 app = Flask(__name__)
@@ -91,12 +91,15 @@ def take_test(test_id):
     if request.method == "POST":
         responses = request.form.getlist("responses[]")
 
-        for response in responses:
-            conn.execute(text('insert into responses (TestID, StudentID, ResponseText) values (:test_id, :student_id, :response_text)'), {"test_id": test_id, "student_id": account_id, "response_text": response})
-            
+        responses_str = ",".join(responses)
+
+        conn.execute(text('insert into responses (TestID, StudentID, ResponseText) values (:test_id, :student_id, :response_text)'), {"test_id": test_id, "student_id": account_id, "response_text": responses_str})
+                    
+        conn.execute(text(f'update tests set StudentCompletions = StudentCompletions + 1 where TestID = {test_id}'), {"test_id": test_id})
+
         conn.commit()
 
-        return render_template("tests.html", success="Responses submitted successfully!")
+        return redirect(url_for("manage_tests"))
 
 
     test = conn.execute(text("select TestName, Questions from tests where TestID = :test_id"), {"test_id": test_id}).fetchone()
@@ -106,6 +109,12 @@ def take_test(test_id):
         return render_template("taketest.html", test_name=test.TestName, questions=questions)
     else:
         return render_template("home.html", error="Test not found.")
+    
+@app.route('/delete_test/<int:test_id>', methods=['POST'])
+def delete_test(test_id):
+    conn.execute(text('Delete from tests where TestID = :test_id'), {"test_id": test_id})
+    conn.commit()
+    return redirect(url_for("manage_tests"))
 
 if __name__ == '__main__':
     app.run(debug=True)
