@@ -1,28 +1,58 @@
 {% extends 'base.html' %}
 
 {% block body %}
+    {% if AccountType == 'Student' %}
     <div class="container">
         <h1>Responses for {{ test_name }}</h1>
+        <a href="{{ url_for('manage_tests') }}">
+            <button>Back to tests</button>
+        </a>
 
         {% if responses %}
             <table>
                 <tr>
                     <th>Student</th>
                     <th>Responses</th>
+                    <th>Grade</th>
                 </tr>
                 {% for response in responses %}
                     <tr>
                         <td>{{ response.Username }}</td>
                         <td>{{ response.ResponseText }}</td>
+                        <td>{{ response.Grade }}</td>
                     </tr>
                 {% endfor %}
             </table>
         {% else %}
             <p>No responses.</p>
         {% endif %}
-
-        <a href="{{ url_for('manage_tests') }}">
-            <button>Back to tests</button>
-        </a>
     </div>
+
+    {% elif AccountType == 'Teacher' %}
+        <div class="container">
+            <h1>Responses for {{ test_name }}</h1>
+            <a href="{{ url_for('manage_tests') }}">
+                <button>Back to tests</button>
+            </a>
+
+            {% if responses %}
+                <table>
+                    <tr>
+                        <th>Student</th>
+                        <th>Responses</th>
+                        <th>Grade</th>
+                    </tr>
+                    {% for response in responses %}
+                        <tr>
+                            <td>{{ response.Username }}</td>
+                            <td>{{ response.ResponseText }}</td>
+                            <td><button>Grade</button></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No responses.</p>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}

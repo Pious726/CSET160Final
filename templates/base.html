@@ -41,19 +41,6 @@
         if (selectedType) {
             document.getElementById("AccountType").value = selectedType;
         }
-
-        document.getElementById('AccountType').addEventListener('change', function() {
-            const selectedType = this.value;
-            const url = new URL(window.location.href);
-
-            if (selectedType) {
-                url.searchParams.set('AccountType', selectedType);
-            } else {
-                url.searchParams.delete('AccountType');
-            }
-
-            window.location.href = url.toString()
-        });
     });
 </script>
 </html>

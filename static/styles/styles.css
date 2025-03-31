@@ -35,6 +35,9 @@ h2 {
     text-align: center;
     margin: 10px 0;
 }
+p {
+    font-family: sans-serif;
+}
 
 /* Styles for header */
 header {
@@ -132,8 +135,8 @@ input {
 }
 
 .account-card {
-    background-color: var(--purple);
-    width: 30%;
+    background-color: #fff;
+    width: 46%;
     padding: 20px;
     margin: 15px;
     border-radius: 10px;
@@ -155,9 +158,39 @@ input {
 }
 
 /* Styles for test page */
-/* Student */
+.s-test-card {
+    background-color: #fff;
+    border-radius: 1em;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 15px;
+}
+.s-test-card h1, .s-test-card h2 {
+    text-align: left;
+}
+.s-test-card h1 {
+    margin: 0 0 2px 0;
+}
+.s-test-card h2 {
+    margin: 20px 0 2px 0;
+}
+.s-test-card li {
+    list-style-type: none;
+}
+.test-btn {
+    padding: 10px;
+    margin: 10px 0 10px 0;
+    border: 2px solid var(--pink);
+    background-color: var(--backgroundColor);
+}
+.teacher-test-d {
+    margin-bottom: 20px;
+}
 
-
-
-
-/* Teacher */
+/* Styles for responses page */
+table {
+    border: 1px solid #000;
+    margin: 10px auto;
+    width: 100%;
+    padding: 10px 20px;
+}
