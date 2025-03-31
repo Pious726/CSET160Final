@@ -70,6 +70,9 @@
                         <form action="{{ url_for('see_responses', test_id=test.TestID) }}" method="GET">
                             <button type="submit" class="view-responses-btn">View Responses</button>
                         </form>
+                        <form action="{{ url_for('edit_questions_page', test_id=test.TestID)}}" method="GET">
+                            <button type="submit" class="edit-btn">Edit Questions</button>
+                        </form>
                     </div>
                 {% endfor %}
             </div>

@@ -31,8 +31,6 @@ def signup():
 
 @app.route('/login.html', methods=["GET"])
 def getlogins():
-    conn.execute(text('update accounts set IsLoggedIn = 0'))
-    conn.commit()
     return render_template('login.html')
 
 @app.route('/login.html', methods=["POST"])
@@ -43,11 +41,17 @@ def login():
         query = conn.execute(text(f'select UserPassword from accounts where Username = :username'), {'username': username}).scalar()
         
         if query and password == query:
-            conn.execute(text('update accounts set IsLoggedIn = 1 where Username = :username'),  {'username': username})
+            conn.execute(text('update accounts set IsLoggedIn = 1 where Username = :username'), {'username': username})
             conn.commit()
-            return render_template('home.html', error = None, success = "Successful")
+            return redirect(url_for("home"))
     except:
         return render_template('login.html', error = "Incorrect Username or Password", success = None)
+
+@app.route('/logout')
+def logout():
+    conn.execute(text('update accounts set IsLoggedIn = 9 where IsLoggedIn = 1'))
+    conn.commit()
+    return redirect('/login.html')
 
 @app.route('/home.html')
 def home():
@@ -128,6 +132,36 @@ def delete_test(test_id):
     conn.execute(text('Delete from tests where TestID = :test_id'), {"test_id": test_id})
     conn.commit()
     return redirect(url_for("manage_tests"))
+
+@app.route('/edit_questions_page/<int:test_id>')
+def edit_questions_page(test_id):
+    test = conn.execute(text('Select * from tests where TestID = :test_id'), {"test_id": test_id}).fetchone()
+
+    if not test:
+        return "Test Not Found", 404
+    
+    return render_template('editquestions.html', test=test)
+
+@app.route('/edit_question/<int:test_id>', methods=["POST"])
+def edit_question(test_id):
+    try: 
+        new_questions = request.form.getlist("questions[]")
+        updated_questions_str = ",".join(new_questions)
+
+        result =  conn.execute(
+        text('Update tests set Questions = :questions where TestID = :test_id'),
+        {"questions": updated_questions_str, "test_id": test_id}
+        )
+        conn.commit()
+
+        if result.rowcount == 0:
+            return "Test Not Found or No Changes Made", 404
+
+        return redirect(url_for('manage_tests'))
+
+    except Exception as e:
+        return f"An Error occurred: {e}", 500
+
 
 @app.route('/test_responses/<int:test_id>', methods=["GET", "POST"])
 def see_responses(test_id):
