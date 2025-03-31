@@ -108,7 +108,7 @@ def take_test(test_id):
     existing_response = conn.execute(text('select ResponseID from responses where TestID = :test_id and StudentID = :student_id'), {"test_id": test_id, "student_id": account_id}).fetchone()
 
     if existing_response:
-        return redirect(url_for("home", error="You have already taken this test."))
+        return redirect(url_for("manage_tests", error="You have already taken this test."))
 
     if request.method == "POST":
         responses = request.form.getlist("responses[]")
