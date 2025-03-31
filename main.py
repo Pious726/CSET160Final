@@ -122,53 +122,25 @@ def take_test(test_id):
         return render_template("taketest.html", test_name=test.TestName, questions=questions)
     else:
         return render_template("home.html", error="Test not found.")
-    
+
 @app.route('/delete_test/<int:test_id>', methods=['POST'])
 def delete_test(test_id):
     conn.execute(text('Delete from tests where TestID = :test_id'), {"test_id": test_id})
     conn.commit()
     return redirect(url_for("manage_tests"))
 
-
-@app.route('/edit_question/<int:test_id>', methods=["POST"])
-def edit_question(test_id):
-    # Get the new question from the form
-    new_question = request.form.get("question")
-    print(f"New Question: {new_question}")  # Debugging line to ensure we're receiving data
-
-    # Fetch the current questions from the database
-    test = conn.execute(text('select Questions from tests where TestID = :test_id'), {"test_id": test_id}).fetchone()
-
-    if test:
-        questions = test.Questions.split(",") if test.Questions else []
-        print(f"Current Questions: {questions}")  # Debugging line to view current questions
-
-        # Update the question in the list (this is assuming you're just replacing the question)
-        updated_questions = [new_question if q == new_question else q for q in questions]
-        updated_question_str = ",".join(updated_questions)
-
-        # Debugging line to check the updated list
-        print(f"Updated Questions: {updated_questions}")
-
-        # Update the database with the new list of questions
-        conn.execute(text('UPDATE tests SET Questions = :questions WHERE TestID = :test_id'),
-                    {"questions": updated_question_str, "test_id": test_id})
-        conn.commit()
-        print("Database updated successfully.")  # Debugging confirmation
-
-    return redirect(url_for('manage_tests'))  # Redirect back to the tests page
-
 @app.route('/test_responses/<int:test_id>', methods=["GET", "POST"])
 def see_responses(test_id):
     account_type = conn.execute(text('select AccountType from accounts where IsLoggedIn = 1')).scalar()
     test = conn.execute(text("select TestName from tests where TestID = :test_id"), {"test_id": test_id}).fetchone()
+    response_id = conn.execute(text("select ResponseID from responses where TestID = :test_id"), {"test_id": test_id}).scalar()
 
     responses = conn.execute(text("select accounts.Username, responses.ResponseText from responses join accounts on responses.StudentID = accounts.AccountID where responses.TestID = :test_id"), {"test_id": test_id}).fetchall()
 
     if not test:
         return redirect(url_for("manage_tests"))
     
-    return render_template("responses.html", AccountType=account_type, test_name=test.TestName, responses=responses)
+    return render_template("responses.html", AccountType=account_type, test_name=test.TestName, responses=responses, ResponseID=response_id)
 
 if __name__ == '__main__':
     app.run(debug=True)

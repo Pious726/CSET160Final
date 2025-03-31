@@ -177,20 +177,37 @@ input {
 .s-test-card li {
     list-style-type: none;
 }
-.test-btn {
-    padding: 10px;
+button {
+    padding: 5px 10px;
     margin: 10px 0 10px 0;
     border: 2px solid var(--pink);
-    background-color: var(--backgroundColor);
+    background-color: #fff;
+    cursor: pointer;
 }
 .teacher-test-d {
     margin-bottom: 20px;
 }
+.grade {
+    text-align: center;
+}
 
 /* Styles for responses page */
-table {
-    border: 1px solid #000;
-    margin: 10px auto;
-    width: 100%;
-    padding: 10px 20px;
+.response-card {
+    background-color: #fff;
+    border-radius: 1em;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 15px;
+}
+.response-card h1, .response-card h2 {
+    text-align: left;
+}
+.response-card h1 {
+    margin: 0 0 2px 0;
+}
+.response-card h2 {
+    margin: 20px 0 2px 0;
+}
+.response-card li {
+    list-style-type: none;
 }
