@@ -105,6 +105,11 @@ def manage_tests():
 def take_test(test_id):
     account_id = conn.execute(text('select AccountID from accounts where IsLoggedIn = 1')).scalar()
 
+    existing_response = conn.execute(text('select ResponseID from responses where TestID = :test_id and StudentID = :student_id'), {"test_id": test_id, "student_id": account_id}).fetchone()
+
+    if existing_response:
+        return redirect(url_for("home", error="You have already taken this test."))
+
     if request.method == "POST":
         responses = request.form.getlist("responses[]")
 
@@ -162,7 +167,6 @@ def edit_question(test_id):
     except Exception as e:
         return f"An Error occurred: {e}", 500
 
-
 @app.route('/test_responses/<int:test_id>', methods=["GET", "POST"])
 def see_responses(test_id):
     account_type = conn.execute(text('select AccountType from accounts where IsLoggedIn = 1')).scalar()
@@ -174,7 +178,16 @@ def see_responses(test_id):
     if not test:
         return redirect(url_for("manage_tests"))
     
-    return render_template("responses.html", AccountType=account_type, test_name=test.TestName, responses=responses, ResponseID=response_id)
+    return render_template("responses.html", AccountType=account_type, test_name=test.TestName, responses=responses, ResponseID=response_id, test_id=test_id)
+
+@app.route('/grade_responses/<int:test_id>', methods=["GET", "POST"])
+def grade_test(test_id):
+    grade = request.form.get("grade")
+
+    conn.execute(text('update responses set Grade = :grade where TestID = :test_id'), {"grade": grade, "test_id": test_id})
+    conn.commit()
+
+    return redirect(url_for('see_responses', test_id=test_id))
 
 if __name__ == '__main__':
     app.run(debug=True)

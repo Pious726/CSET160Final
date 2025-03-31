@@ -6,6 +6,10 @@
             <h1>Welcome Student!</h1>
             <h2>Select one of the tests below.</h2>
 
+            {% if error %}
+            <p>{{error}}</p>
+            {% endif %}
+
             <div class="s-test-container">
                 {% for test in tests %}
                     <div class="s-test-card">

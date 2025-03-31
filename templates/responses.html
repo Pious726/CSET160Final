@@ -14,7 +14,7 @@
                         <h1>Response {{ ResponseID }}</h1>
                         <p>Student Username: {{ response.Username }}</p>
                         <p>Response(s): {{ response.ResponseText }}</p>
-                        <p>Grade: {{ grade }}</p>
+                        <p>Grade: {{ response.Grade if response.Grade is not none else "Not Graded" }}</p>
                     </div>
                 {% endfor %}
             {% else %}
@@ -35,7 +35,11 @@
                         <h1>Response {{ ResponseID }}</h1>
                         <p>Student Username: {{ response.Username }}</p>
                         <p>Response(s): {{ response.ResponseText }}</p>
-                        <p><button class="test-btn">Grade</button></p>
+                        <form action="{{ url_for('grade_test', test_id=test_id) }}" method="POST">
+                            <input type="hidden" name="response_id" value="{{ response.ResponseID }}">
+                            <input type="text" name="grade" style="margin: 10px 0 0 0;">
+                            <button class="test-btn">Grade</button>
+                        </form>
                     </div>
                 {% endfor %}
             {% else %}
