@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/styles/styles.css">
+    <title>Exam App</title>
+</head>
+<body>
+    <header>
+        <div class="topnav">
+                <img class="logo_img" src="../static/images/logo.png" alt="logo" id="logo">
+            
+                <div id="nav">
+                    <ul class="barNav">
+                        <li><a href="{{ url_for('home') }}">Home</li>
+                        <li><a href="{{ url_for('accounts') }}">Accounts</a></li>
+                        <li><a href="{{ url_for('manage_tests') }}">Tests</a></li>
+                        <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+                    </ul>
+                </div>
+        </div>
+    </header>
+    
+    {% block body %}
+    
+    
+    {% endblock %}
+
+    <footer>
+        <div class="container">
+            <p class="copyright">Copyright &copy; 2025 All right reserved. Created by Tyler McDowell and Ryan Sweeney.</p>
+        </div>
+    </footer>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedType = urlParams.get("AccountType");
+
+        if (selectedType) {
+            document.getElementById("AccountType").value = selectedType;
+        }
+    });
+</script>
+</html>

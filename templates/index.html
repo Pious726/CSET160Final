@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/styles/styles.css" rel="stylesheet">
+    <title>Exam App - Sign up</title>
+</head>
+<body class="register" id="register">
+    <div id="register-container">
+        {% if error %}
+            <h2>{{error}}</h2>
+        {% endif %}
+
+        {% if success %}
+            <h2>{{success}}</h2>
+        {% endif %}
+        <div class="signup-item">
+            <h1>Sign Up!</h1>
+            <form action="/" method="POST">
+                <input type="text" name="Username" placeholder="Username" id="Uname">
+                <input type="email" name="EmailAddress" placeholder="Email Address" id="email">
+                <input type="password" name="UserPassword" placeholder="Password" id="password" maxlength="18">
+                <br>
+                <p>Are you a:</p>
+                <input type="radio" id="student" name="AccountType" value="Student">
+                <label for="student">Student</label>
+                <input type="radio" id="teacher" name="AccountType" value="Teacher">
+                <label for="teacher">Teacher</label>
+                <input type="submit" value="Sign Up!" class="input_submit">
+            </form>
+        </div>
+        <div class="signup-item">
+            <h2>Already have an account? <a href="login.html">Click here!</a></h2>
+        </div>
+    </div>
+</body>
+</html>

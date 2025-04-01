@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <h1>{{ test_name }}</h1>
+
+        <form method="POST">
+            {% for question in questions %}
+                <div class="question">
+                    <p>{{ question }}</p>
+                    <input type="text" name="responses[]" required>
+                </div>
+            {% endfor %}
+            <button type="submit">Submit Test</button>
+        </form>
+    </div>
+{% endblock %}

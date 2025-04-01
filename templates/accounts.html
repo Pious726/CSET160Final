@@ -1,0 +1,28 @@
+{%extends 'base.html'%}
+{% block body %}
+        <div class="container">
+            <h1>Account List</h1>
+
+            <div class="filter">
+                <select id="AccountType" name="AccountType" data-dropdown>
+                    <option value="">All</option>
+                    <option value="Student">Students</option>
+                    <option value="Teacher">Teachers</option>
+                </select>
+            </div>
+
+            <div class="account-grid">
+                {% for account in accounts %}
+                    <div class="account-card">
+                        <ul>
+                            <li>Account ID: {{account[0]}}</li>
+                            <li>Username: {{account[1]}}</li>
+                            <li>Email Address: {{account[2]}}</li>
+                            <li>Password: {{account[3]}}</li>
+                            <li>Account Type: {{account[4]}}</li>
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+{% endblock %}

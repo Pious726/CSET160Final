@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <h1>Edit Questions for {{ test.TestName }}</h1>
+        
+        {% if error %}
+            <h2>{{ error }}</h2>
+        {% endif %}
+
+        {% if success %}
+            <h2>{{ success }}</h2>
+        {% endif %}
+
+        <form action="{{ url_for('edit_question', test_id=test.TestID) }}" method="POST">
+            <div id="question-container">
+                {% for question in test.Questions.split(',') %}
+                    <div class="question-item">
+                        <input type="text" name="questions[]" value="{{ question }}" required>
+                        <button type="button" onclick="removeQuestion(this)">Remove</button>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="button" onclick="addQuestion()">Add Another Question</button>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+
+    <script>
+        function addQuestion() {
+            let container = document.getElementById("question-container");
+            let newDiv = document.createElement("div");
+            newDiv.classList.add("question-item");
+            newDiv.innerHTML = '<input type="text" name="questions[]" required> <button type="button" onclick="removeQuestion(this)">Remove</button>';
+            container.appendChild(newDiv);
+        }
+        
+        function removeQuestion(button) {
+            let container = document.getElementById("question-container");
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+    </script>
+{% endblock %}

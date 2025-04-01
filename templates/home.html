@@ -1,0 +1,9 @@
+{%extends 'base.html'%}
+{% block body %}
+    <h1>Hello, {{ username }}!</h1>
+    {% if account_type == "Student" %}
+    <h2>Go to accounts to see all registered accounts. Or go to tests to take a test.</h2>
+    {% elif account_type == "Teacher" %}
+    <h2>Go to accounts to see all registered accounts. Or go to tests to make a test.</h2>
+    {% endif %}
+{% endblock %}

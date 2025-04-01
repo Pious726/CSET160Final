@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    {% if AccountType == 'Student' %}
+        <div class="container">
+            <h1>Welcome Student!</h1>
+            <h2>Select one of the tests below.</h2>
+
+            {% if error %}
+                <p>{{error}}</p>
+            {% endif %}
+
+            <div class="s-test-container">
+                {% for test in tests %}
+                    <div class="s-test-card">
+                        <h1>Test {{ test.TestID }}: {{ test.TestName }}</h1>
+                        <p>Student Completions: {{ test.StudentCompletions }}</p>
+                        <div class="test-description">
+                            <h2>Test Description:</h2>
+                            <p>{{ test.Description }}</p>
+                        </div>
+                        <a href="{{ url_for('take_test', test_id=test.TestID) }}">
+                            <button class="test-btn">Take Test</button>
+                        </a>
+                        <form action="{{ url_for('see_responses', test_id=test.TestID) }}" method="GET">
+                            <button type="submit" class="test-btn">View Responses</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+    {% elif AccountType == 'Teacher' %}
+        <div class="container">
+            <h1>Welcome Teacher!</h1>
+            <h2>Create a new test.</h2>
+
+            {% if error %}
+                <h2>{{error}}</h2>
+            {% endif %}
+
+            {% if success %}
+                <h2>{{success}}</h2>
+            {% endif %}
+
+            <form action="{{ url_for('manage_tests')}}" method="POST">
+                <label for="test_name">Test Name:</label>
+                <input type="text" id="test_name" name="test_name" required>
+
+                <label for="description">Test Description:</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <div id="question-container">
+                    <label for="questions">Questions:</label>
+                    <input type="text" name="questions[]" id="questions" required>
+                </div>
+
+                <button type="button" onclick="addQuestion()">Add Another Question</button>
+                <button type="submit">Add Test</button>
+            </form>
+
+            <h1>Existing Tests</h1>
+            <div class="s-test-container">
+                {% for test in tests %}
+                    <div class="s-test-card">
+                        <h1>{{ test.TestName }}</h1> 
+                    
+                        <p class="student-completions">Student Completions: {{ test.StudentCompletions }}</p>
+                        <h2>Test Description</h2>
+                        <p class="teacher-test-d">{{ test.Description }}</p>
+                        <form action="{{ url_for('delete_test' , test_id=test.TestID) }}" method="POST">
+                            <button type="submit" class="delete-btn">Delete Test</button>
+                        </form>
+                        <form action="{{ url_for('see_responses', test_id=test.TestID) }}" method="GET">
+                            <button type="submit" class="view-responses-btn">View Responses</button>
+                        </form>
+                        <form action="{{ url_for('edit_questions_page', test_id=test.TestID)}}" method="GET">
+                            <button type="submit" class="edit-btn">Edit Questions</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <script>
+            function addQuestion() {
+                let container = document.getElementById("question-container");
+                let newInput = document.createElement("input");
+                newInput.type = "text";
+                newInput.name = "questions[]";
+                newInput.required = true;
+                container.appendChild(newInput);
+            }
+            
+            document.addEventListener("DOMContentLoaded", function() {
+                if (window.history.replaceState) {
+                    window.history.replaceState(null, null, window.location.href);
+                }
+            });
+        </script>
+    {% endif %}
+{% endblock %}

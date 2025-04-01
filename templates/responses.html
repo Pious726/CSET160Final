@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    {% if AccountType == 'Student' %}
+        <div class="container">
+            <h1>Responses for {{ test_name }}</h1>
+            <a href="{{ url_for('manage_tests') }}">
+                <button>Back to tests</button>
+            </a>
+
+            {% if responses %}
+                {% for response in responses %}
+                    <div class="response-card">
+                        <h1>Response {{ ResponseID }}</h1>
+                        <p>Student Username: {{ response.Username }}</p>
+                        <p>Response(s): {{ response.ResponseText }}</p>
+                        <p>Grade: {{ response.Grade if response.Grade is not none else "Not Graded" }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No responses.</p>
+            {% endif %}
+        </div>
+
+    {% elif AccountType == 'Teacher' %}
+        <div class="container">
+            <h1>Responses for {{ test_name }}</h1>
+            <a href="{{ url_for('manage_tests') }}">
+                <button>Back to tests</button>
+            </a>
+
+            {% if responses %}
+                {% for response in responses %}
+                    <div class="response-card">
+                        <h1>Response {{ ResponseID }}</h1>
+                        <p>Student Username: {{ response.Username }}</p>
+                        <p>Response(s): {{ response.ResponseText }}</p>
+                        <form action="{{ url_for('grade_test', test_id=test_id) }}" method="POST">
+                            <input type="hidden" name="response_id" value="{{ response.ResponseID }}">
+                            <input type="text" name="grade" style="margin: 10px 0 0 0;">
+                            <button class="test-btn">Grade</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No responses.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
