@@ -42,11 +42,12 @@ def login():
         password = request.form.get("UserPassword")
         query = conn.execute(text(f'select UserPassword from accounts where Username = :username'), {'username': username}).scalar()
         
-        if query and password == query:
+        if query is not None and password == query:
             conn.execute(text('update accounts set IsLoggedIn = 1 where Username = :username'), {'username': username})
             conn.commit()
             return redirect(url_for("home"))
-    except:
+    except Exception as e:
+        print(f"Login Error: {e}")
         return render_template('login.html', error = "Incorrect Username or Password", success = None)
 
 @app.route('/logout')
@@ -136,7 +137,10 @@ def take_test(test_id):
 
 @app.route('/delete_test/<int:test_id>', methods=['POST'])
 def delete_test(test_id):
-    conn.execute(text('Delete from tests where TestID = :test_id'), {"test_id": test_id})
+    conn.execute(text('DELETE FROM responses WHERE TestID = :test_id'), {"test_id": test_id})
+    
+    conn.execute(text('DELETE FROM tests WHERE TestID = :test_id'), {"test_id": test_id})
+    
     conn.commit()
     return redirect(url_for("manage_tests"))
 
