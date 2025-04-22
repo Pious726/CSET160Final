@@ -175,7 +175,9 @@ def see_responses(test_id):
     test = conn.execute(text("select TestName from tests where TestID = :test_id"), {"test_id": test_id}).fetchone()
     response_id = conn.execute(text("select ResponseID from responses where TestID = :test_id"), {"test_id": test_id}).scalar()
 
-    responses = conn.execute(text("select accounts.Username, responses.ResponseText from responses join accounts on responses.StudentID = accounts.AccountID where responses.TestID = :test_id"), {"test_id": test_id}).fetchall()
+    responses = conn.execute(text("""
+    SELECT 
+        accounts.Username, responses.ResponseText, responses.Grade, responses.ResponseID FROM responses JOIN accounts ON responses.StudentID = accounts.AccountID WHERE responses.TestID = :test_id"""), {"test_id": test_id}).fetchall()
 
     if not test:
         return redirect(url_for("manage_tests"))

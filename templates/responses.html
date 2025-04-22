@@ -14,7 +14,7 @@
                         <h1>Response {{ ResponseID }}</h1>
                         <p>Student Username: {{ response.Username }}</p>
                         <p>Response(s): {{ response.ResponseText }}</p>
-                        <p>Grade: {{ response.Grade if response.Grade is not none else "Not Graded" }}</p>
+                        <p>Grade: {{ response.Grade}}</p>
                     </div>
                 {% endfor %}
             {% else %}
