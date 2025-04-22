@@ -3,13 +3,13 @@
         <div class="container">
             <h1>Account List</h1>
 
-            <div class="filter">
-                <select id="AccountType" name="AccountType" data-dropdown>
+            <form method="get" action="/accounts.html">
+                <select id="AccountType" name="AccountType" onchange="this.form.submit()">
                     <option value="">All</option>
                     <option value="Student">Students</option>
                     <option value="Teacher">Teachers</option>
                 </select>
-            </div>
+            </form>
 
             <div class="account-grid">
                 {% for account in accounts %}

@@ -31,6 +31,8 @@ def signup():
 
 @app.route('/login.html', methods=["GET"])
 def getlogins():
+    conn.execute(text('update accounts set IsLoggedIn = 0 where IsLoggedIn = 1'))
+    conn.commit()
     return render_template('login.html')
 
 @app.route('/login.html', methods=["POST"])
@@ -49,7 +51,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    conn.execute(text('update accounts set IsLoggedIn = 9 where IsLoggedIn = 1'))
+    conn.execute(text('update accounts set IsLoggedIn = 0 where IsLoggedIn = 1'))
     conn.commit()
     return redirect('/login.html')
 
